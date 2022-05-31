@@ -1,7 +1,7 @@
 # sica-omics
 
 <p align="center">
-    <img src="https://github.com/ncaptier/sica-omics/temporary_logo.png" width="400" height="400" />
+    <img src="https://github.com/ncaptier/sica-omics/blob/main/temporary_logo.png" width="400" height="400" />
 </p>
 
 This repository proposes a computational toolbox to complement the Python package [stabilized-ica](https://github.com/ncaptier/stabilized-ica) for the analysis of omics data.   
