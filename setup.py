@@ -21,10 +21,7 @@ setuptools.setup(
         "mygene>=3.2.2",
         "reactome2py>=1.0.0",
         "requests>=2.27.1",
-        "stabilized-ica"
-    ],
-    dependency_links=[
-        "git+https://github.com/ncaptier/stabilized-ica.git@feature_sklearn_api",
+       # "stabilized-ica"
     ],
     extras_require={"dev": ["pytest"],
                     "doc": ["sphinx >= 3.2.1", "sphinx-gallery >= 0.9.0", "numpydoc >= 1.1.0", "nbsphinx >= 0.8.7"]},
