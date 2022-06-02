@@ -1,4 +1,4 @@
-# sica-omics
+# sica-omics (in development)
 
 <p align="center">
     <img src="https://github.com/ncaptier/sica-omics/blob/main/temporary_logo.png" width="400" height="400" />
@@ -10,10 +10,19 @@ This repository proposes a computational toolbox to complement the Python packag
 * sicaomics.annotate proposes tools to annotate the extracted stabilized ICA sources with functionnal enrichment analysis (using [Reactome](https://reactome.org/) or [ToppGene](https://toppgene.cchmc.org/) knowledge databases).
 
 
-### Install from source
-```
-pip install git+https://github.com/ncaptier/sica-omics
-```
+## Installation
+
+**Warning:** This repository is still in development. It complements the [curent development branch of the Python package stabilized-ica](https://github.com/ncaptier/stabilized-ica/tree/feature_sklearn_api). In this branch you will find jupyter-notebooks which illustrate the joint use of stabilized-ica and sica-omics to apply ICA on omics data.
+
+1. Install stabilized-ica package from the current development branch running the following command
+    ```
+    pip install git+https://github.com/ncaptier/stabilized-ica.git@feature_sklearn_api
+    ```
+
+2. Install sica-omics package with the following command
+    ```
+    pip install git+https://github.com/ncaptier/sica-omics
+    ```
 
 
 ## Acknowledgements
