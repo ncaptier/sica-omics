@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="sica-omics",
-    version="0.0.1a",
+    version="0.0.1",
     author="Nicolas Captier",
     author_email="nicolas.captier@curie.fr",
     description="Toolbox for omics analysis with stabilized-ica package",
@@ -21,14 +21,21 @@ setuptools.setup(
         "mygene>=3.2.2",
         "reactome2py>=1.0.0",
         "requests>=2.27.1",
-        "stabilized-ica==2.0.0"
+        "stabilized-ica==2.0.0",
     ],
-    extras_require={"dev": ["pytest"],
-                    "doc": ["sphinx == 5.0.2", "sphinx-gallery == 0.10.0", "numpydoc == 1.2", "nbsphinx == 0.8.9"]},
+    extras_require={
+        "dev": ["pytest"],
+        "doc": [
+            "sphinx == 5.0.2",
+            "sphinx-gallery == 0.10.0",
+            "numpydoc == 1.2",
+            "nbsphinx == 0.8.9",
+        ],
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.8',
+    python_requires=">=3.8",
 )
