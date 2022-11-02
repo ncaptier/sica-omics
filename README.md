@@ -4,6 +4,9 @@
     <img src="https://github.com/ncaptier/sica-omics/blob/main/temporary_logo.png" width="400" height="400" />
 </p>
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 This repository proposes a computational toolbox to complement the Python package [stabilized-ica](https://github.com/ncaptier/stabilized-ica) for the analysis of omics data.   
 
 * sicaomics.singlecell proposes an adaptation of stabilized-ica for the special case of [AnnData](https://anndata.readthedocs.io/en/latest/) format. It is modeled after the [scanpy](https://scanpy.readthedocs.io/en/stable/) package that deals with single-cell gene expression data.
