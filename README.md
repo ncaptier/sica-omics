@@ -1,4 +1,4 @@
-# sica-omics (in development)
+# sica-omics
 
 <p align="center">
     <img src="https://github.com/ncaptier/sica-omics/blob/main/temporary_logo.png" width="400" height="400" />
@@ -12,18 +12,55 @@ This repository proposes a computational toolbox to complement the Python packag
 
 ## Installation
 
-**Warning:** This repository is still in development. It complements the [curent development branch of the Python package stabilized-ica](https://github.com/ncaptier/stabilized-ica/tree/feature_sklearn_api). In this branch you will find jupyter-notebooks which illustrate the joint use of stabilized-ica and sica-omics to apply ICA on omics data.
+Install sica-omics package from source with the following command:
 
-1. Install stabilized-ica package from the current development branch running the following command
-    ```
-    pip install git+https://github.com/ncaptier/stabilized-ica.git@feature_sklearn_api
-    ```
+ ```
+ pip install git+https://github.com/ncaptier/sica-omics
+ ```
 
-2. Install sica-omics package with the following command
-    ```
-    pip install git+https://github.com/ncaptier/sica-omics
-    ```
+## Examples
 
+#### Application of stabilized-ica to single-cell data
+
+```python
+import scanpy
+from sicaomics.singlecell import ica
+
+adata = scanpy.read_h5ad('GSE90860_3.h5ad')
+adata.X -= adata.X.mean(axis =0)
+
+ica(adata , observations = 'genes' , n_components = 30 , n_runs = 100)
+```
+
+#### Annotation of stabilized-ica components
+
+```python
+#### Perform stabilized-ica decomposition ####
+import pandas as pd
+from sica.base import StabilizedICA
+
+df = pd.read_csv("data.csv", index_col=0)
+sICA = StabilizedICA(n_components=45, n_runs=30 ,plot=True, n_jobs = -1)
+sICA.fit(df)
+Metagenes = pd.DataFrame(
+    sICA.S_, 
+    columns = df.columns,
+    index = ['metagene ' + str(i) for i in range(sICA.S_.shape[0])]
+)
+
+#### Annotate metagenes with Reactome ####
+from sicaomics.annotate import reactome
+
+Rannot = reactome.ReactomeAnalysis(
+    data = Metagenes,
+    threshold = 3,
+    method = 'std',
+    tail = 'heaviest',
+    convert_ids = False
+)
+Rannot.get_analysis(metagene = 'metagene 0')
+```
+**Note:** For more detailed examples please refer to [this jupyter notebook](https://github.com/ncaptier/stabilized-ica/blob/master/examples/transcriptomic_ICA.ipynb)
 
 ## Acknowledgements
 
