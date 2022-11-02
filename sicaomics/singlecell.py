@@ -7,65 +7,70 @@ from typing import Optional, Union
 
 
 def ica(
-        data: Union[np.ndarray, AnnData],
-        observations: str,
-        n_components: int,
-        n_runs: int,
-        resampling: Optional[str] = None,
-        return_info: Optional[bool] = False,
-        copy: Optional[bool] = False,
-        plot_projection: Optional[str] = None,
-        fun: Optional[str] = "logcosh",
-        algorithm: Optional[str] = "fastica_par",
-        normalize: Optional[bool] = True,
-        reorientation: Optional[bool] = True,
-        whiten: Optional[bool] = True,
-        pca_solver: Optional[str] = "auto",
-        chunked: Optional[bool] = False,
-        chunk_size: Optional[int] = None,
-        zero_center: Optional[bool] = True,
+    data: Union[np.ndarray, AnnData],
+    observations: str,
+    n_components: int,
+    n_runs: int,
+    resampling: Optional[str] = None,
+    return_info: Optional[bool] = False,
+    copy: Optional[bool] = False,
+    plot_projection: Optional[str] = None,
+    fun: Optional[str] = "logcosh",
+    algorithm: Optional[str] = "fastica_par",
+    normalize: Optional[bool] = True,
+    reorientation: Optional[bool] = True,
+    whiten: Optional[bool] = True,
+    pca_solver: Optional[str] = "auto",
+    chunked: Optional[bool] = False,
+    chunk_size: Optional[int] = None,
+    zero_center: Optional[bool] = True,
 ):
-    """ Compute stabilized ICA decomposition for AnnData formats. Use the implementation of stabilized ICA in
+    """Compute stabilized ICA decomposition for AnnData formats. Use the implementation of stabilized ICA in
     the same package (see module sica.base.py)
-    
+
     Parameters
     ----------
     data : AnnData, ndarray, spmatrix, shape (n_cells , n_genes)
         The (annotated) data matrix.
-        
+
     observations : str {'genes' , 'cells'}
-        This parameter allows the user to choose which of the metagenes or the metasamples he wants to consider as ICA independent
-        sources.
-        
-        - If ``observations = 'genes'`` the independent sources will be of shape (n_genes). The metagenes will correspond to the independent ICA sources while the metasamples will correspond to the linear mixing.
-        - If ``observations = 'cells'`` the independent sources will be of shape (n_cells). The metasamples will correspond to the independent ICA sources while the metagenes will correspond to the linear mixing.
-        
+        This parameter allows the user to choose which of the metagenes or the metasamples he wants to consider as ICA
+        independent sources.
+
+        - If ``observations = 'genes'`` the independent sources will be of shape (n_genes). The metagenes will
+        correspond to the independent ICA sources while the metasamples will correspond to the linear mixing.
+        - If ``observations = 'cells'`` the independent sources will be of shape (n_cells). The metasamples will
+        correspond to the independent ICA sources while the metagenes will correspond to the linear mixing.
+
     n_components : int
         Number of stabilized ICA components.
-        
+
     n_runs : int
         Number of times we repeat the FastICA algorithm.
-    
+
     resampling : str {None , 'bootstrap' , 'fast_bootstrap'}, optional
         Method for resampling the data before each run of the ICA solver.
-        
+
         - If None, no resampling is applied.
-        - If 'bootstrap' the classical bootstrap method is applied to the original data matrix, the resampled matrix is whitened (using the whitening hyperparameters set for the fit method) and the ICA components are extracted.
-        - If 'fast_boostrap' a fast bootstrap algorithm is applied to the original data matrix and the whitening operation is performed simultaneously with SVD decomposition and then the ICA components are extracted (see References).
-        
-        Resampling could lead to quite heavy computations (whitening at each iteration), depending on the size of the input data. It should be considered with care. The default is None.
-        
+        - If 'bootstrap' the classical bootstrap method is applied to the original data matrix, the resampled matrix is
+         whitened (using the whitening hyperparameters set for the fit method) and the ICA components are extracted.
+        - If 'fast_boostrap' a fast bootstrap algorithm is applied to the original data matrix and the whitening
+         operation is performed simultaneously with SVD decomposition and then the ICA components are extracted (see References).
+
+        Resampling could lead to quite heavy computations (whitening at each iteration), depending on the size of the
+        input data. It should be considered with care. The default is None.
+
     return_info : bool, optionnal
         See results. The default is false.
-        
+
     copy : bool, optionnal
         See results. The default is false.
-        
+
     plot_projection : str {'mds' ,'tsne' , 'umap'}, optional
         Name of the dimensionality reduction method. If ``None``, this projection is
         not computed.
         The default is None.
-    
+
     fun : str {'cube' , 'exp' , 'logcosh' , 'tanh'} or function, optional.
 
         If ``algorithm`` is in {'fastica_par' , 'fastica_def'}, it represents the functional form of the G function used
@@ -115,39 +120,39 @@ def ica(
     zero_center : boolean, optional
         Parameter for the whitening step, see _whitening.py for more details.
         The default is True.
-    
+
     Returns
     -------
     Metasamples : 2D array, shape (n_cells ,  n_components)
-        If ``data`` is array-like and ``return_info = False`` this function only returns the metasamples.  
-        
-        If ``observations = 'genes'`` it corresponds to the mixing matrix.   
-        
+        If ``data`` is array-like and ``return_info = False`` this function only returns the metasamples.
+
+        If ``observations = 'genes'`` it corresponds to the mixing matrix.
+
         If ``observations = 'cells'`` it corresponds to the independent sources.
-        
+
     Metagenes :2D array, shape (n_components , n_genes)
-        If ``data`` is array-like and ``return_info = True`` this function returns the metagenes.   
-        
-        If ``observations = 'genes'`` it corresponds to the independent sources.   
-        
+        If ``data`` is array-like and ``return_info = True`` this function returns the metagenes.
+
+        If ``observations = 'genes'`` it corresponds to the independent sources.
+
         If ``observations = 'cells'`` it corresponds to the mixing matrix.
-        
+
     stability_indexes : 1D array, shape (n_components)
-        If ``data`` is array-like and ``return_info = True`` this function returns the stability indexes for the stabilized ICA 
+        If ``data`` is array-like and ``return_info = True`` this function returns the stability indexes for the stabilized ICA
         components.
-        
+
     adata : AnnData
-        …otherwise if copy=True it returns or else adds fields to ``data``:           
-           .obsm['sica_metasamples'] 
-           
-           .varm['sica_metagenes'] 
-           
-           .uns['sica']['stability_indexes']  
-        
+        …otherwise if copy=True it returns or else adds fields to ``data``:
+           .obsm['sica_metasamples']
+
+           .varm['sica_metagenes']
+
+           .uns['sica']['stability_indexes']
+
     Examples
     --------
     >>> import scanpy
-    >>> from sica.singlecell import ica    
+    >>> from sica.singlecell import ica
     >>> anndata = scanpy.read_h5ad('GSE90860_3.h5ad')
     >>> anndata.X -= anndata.X.mean(axis =0)
     >>> ica(anndata , observations = 'genes' , n_components = 30 , n_runs = 100)
@@ -164,19 +169,19 @@ def ica(
 
     X = adata.X
     sica = StabilizedICA(
-            n_components=n_components,
-            n_runs=n_runs,
-            resampling=resampling,
-            algorithm=algorithm,
-            fun=fun,
-            whiten=whiten,
-            normalize=normalize,
-            reorientation=reorientation,
-            pca_solver=pca_solver,
-            chunked=chunked,
-            chunk_size=chunk_size,
-            zero_center=zero_center,
-            n_jobs=-1,
+        n_components=n_components,
+        n_runs=n_runs,
+        resampling=resampling,
+        algorithm=algorithm,
+        fun=fun,
+        whiten=whiten,
+        normalize=normalize,
+        reorientation=reorientation,
+        pca_solver=pca_solver,
+        chunked=chunked,
+        chunk_size=chunk_size,
+        zero_center=zero_center,
+        n_jobs=-1,
     )
 
     #### 1. Apply stabilized ICA

@@ -9,11 +9,11 @@ from typing import Union, Optional, NoReturn, List, Tuple
 
 
 class ToppFunAnalysis(object):
-    """ Provide tools for running Toppfun enrichment analysis for different metagenes.
+    """Provide tools for running Toppfun enrichment analysis for different metagenes.
 
     Parameters
     ----------
-    data : 
+    data :
         If ``pre_selected = False`` : pandas.DataFrame , shape (n_metagenes , n_genes) or pandas.Series, shape (n_genes)
                 The column names (or the index keys for a serie) should be valid gene IDs.
         If ``pre_selected = True`` : pandas.Series , shape (n_metagenes)
@@ -26,30 +26,30 @@ class ToppFunAnalysis(object):
         probeset ids, and a mix of everything.
         If False ToppFunAnalysis will assume that the inputs are already Entrez IDs. No conversion will be performed.
         The default is True.
-        
+
     pre_selected : boolean, optional.
         Indicate whether the extreme genes have already been selected (see above).
         The default is False.
-        
+
     threshold : numeric or array-like of two numerics, optional
         See sica.annotate._utils.get_top_genes. The default is 3.
-        
+
     method : {'quantile' , 'std'}, optional
         See sica.annotate._utils.get_top_genes. The default is 'std'.
-        
+
     tail : {'left' , 'right' , 'both' , 'heaviest'}, optional
         See sica.annotate._utils.get_top_genes. The default is 'heaviest'.
-    
+
     Attributes
-    ----------    
+    ----------
     top_genes_ : pandas.DataFrame, shape (n_metagenes , 3)
         For each metagene the 'inputs' column contains a list of the IDs of the extreme expressed
         genes.
-    
+
     References
     ----------
     For more details, please refer to the ToppGene API (see https://toppgene.cchmc.org/API/enrich. ).
-    
+
     Examples
     --------
     >>> from sica.annotate import toppfun
@@ -59,14 +59,21 @@ class ToppFunAnalysis(object):
     """
 
     def __init__(
-            self,
-            data: Union[pd.DataFrame, pd.Series],
-            convert_ids: Optional[bool] = True,
-            pre_selected: Optional[bool] = False,
-            threshold: Optional[Union[
-                int, float, np.ndarray, List[Union[float, int]], Tuple[Union[float, int], Union[float, int]]]] = 3,
-            method: Optional[str] = "std",
-            tail: Optional[str] = "heaviest",
+        self,
+        data: Union[pd.DataFrame, pd.Series],
+        convert_ids: Optional[bool] = True,
+        pre_selected: Optional[bool] = False,
+        threshold: Optional[
+            Union[
+                int,
+                float,
+                np.ndarray,
+                List[Union[float, int]],
+                Tuple[Union[float, int], Union[float, int]],
+            ]
+        ] = 3,
+        method: Optional[str] = "std",
+        tail: Optional[str] = "heaviest",
     ) -> NoReturn:
 
         # Check data
@@ -92,21 +99,21 @@ class ToppFunAnalysis(object):
             )
 
     def convert_metagenes(self, idx: Union[str, object, list]) -> None:
-        """ Convert the IDs of the most expressed genes contained in ``top_genes_``.
-        
+        """Convert the IDs of the most expressed genes contained in ``top_genes_``.
+
         Parameters
         ----------
         idx : {"all" , object , list of objects}
-        
-            If ``idx = "all"`` all the metagenes will be converted. 
-            
+
+            If ``idx = "all"`` all the metagenes will be converted.
+
             Otherwise, only the metagenes associated with ``idx`` will be converted. In that case, ``idx`` must
             correspond to valid indexes of the input data.
- 
+
         Returns
         -------
         None
-        
+
         """
 
         # Define the function that will be applied to the rows of self.top_genes_ dataframe
@@ -146,42 +153,42 @@ class ToppFunAnalysis(object):
         return
 
     def get_analysis(
-            self,
-            metagene: object,
-            type_list: Optional[List[str]] = None,
-            p_value: Optional[float] = 0.05,
-            min_entities: Optional[int] = 10,
-            max_entities: Optional[int] = 500,
-            maxres: Optional[int] = 10,
-            correct: Optional[str] = "FDR",
+        self,
+        metagene: object,
+        type_list: Optional[List[str]] = None,
+        p_value: Optional[float] = 0.05,
+        min_entities: Optional[int] = 10,
+        max_entities: Optional[int] = 500,
+        maxres: Optional[int] = 10,
+        correct: Optional[str] = "FDR",
     ) -> pd.DataFrame:
-        """ Return the ToppFun enrichment analysis of a given metagene.
-        
+        """Return the ToppFun enrichment analysis of a given metagene.
+
         Parameters
         ----------
         metagene : object
             It must correspond to a valid index of the input data.
-            
+
         type_list: list of strings, optional
             List of features to perform enrichment tests. If None, all the available features
             will be used (see sica.annotate.toppfun._get_analysis). The default is None.
-        
+
         p_value: float in (0 , 1), optional
             P-value maximal threshold to accept enrichments. The default is 0.05
-            
+
         min_entities: int, optional
             Minimal number of gene hits to accept in feature categories. The default is 10.
-    
+
         max_entities: int, optional
             Maximal number of gene hits to accept in feature categories. The default is 500.
-        
+
         maxres: int, optional
             Number of top enrichments to show for each feature. The default is 10.
-        
+
         correct: str {'none', 'FDR', 'Bonferroni'}, optional
             P-value correction methods. FDR refers to the Benjamini and Hochberg method.
             The default is 'FDR'.
-            
+
         Returns
         -------
         pandas.DataFrame
@@ -214,16 +221,16 @@ class ToppFunAnalysis(object):
 
 
 def _get_analysis(
-        entrez_dict: dict,
-        type_list: List[str],
-        p_value: float,
-        min_entities: int,
-        max_entities: int,
-        maxres: int,
-        correct: str
+    entrez_dict: dict,
+    type_list: List[str],
+    p_value: float,
+    min_entities: int,
+    max_entities: int,
+    maxres: int,
+    correct: str,
 ) -> requests.models.Response:
-    """ Call TOPPGENE API to detect functional enrichments of a gene list (https://toppgene.cchmc.org/API/enrich.)
-    
+    """Call TOPPGENE API to detect functional enrichments of a gene list (https://toppgene.cchmc.org/API/enrich.)
+
     Parameters
     ----------
     entrez_dict: dict
@@ -233,7 +240,7 @@ def _get_analysis(
     -------
     response: requests.models.Response
         Response from "https://toppgene.cchmc.org/API/enrich" API call.
-    
+
     """
     if type_list is None:
         type_list = [

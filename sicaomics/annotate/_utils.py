@@ -14,7 +14,7 @@ from typing import Tuple, Union, List, Any
 #    ----------
 #    genes_list : List of strings
 #        List containing gene IDs.
-#        
+#
 #    input_type: string
 #        Type of input gene IDs.
 #        For available types, see: https://docs.mygene.info/en/latest/doc/query_service.html#available_fields
@@ -47,9 +47,11 @@ from typing import Tuple, Union, List, Any
 #    ]  # remove potential duplicates
 
 
-def convert_to_entrez(genes_list: List[str]) -> Tuple[List[str], List[str], pd.DataFrame]:
-    """ Convert input gene IDs to Entrez gene IDs with mygene conversion tools (see _convert_geneID function).
-    
+def convert_to_entrez(
+    genes_list: List[str],
+) -> Tuple[List[str], List[str], pd.DataFrame]:
+    """Convert input gene IDs to Entrez gene IDs with mygene conversion tools (see _convert_geneID function).
+
     Parameters
     ----------
     genes_list : List of strings
@@ -59,10 +61,10 @@ def convert_to_entrez(genes_list: List[str]) -> Tuple[List[str], List[str], pd.D
     -------
     entrez : List of strings
         List containing Entrez gene IDs corresponding to input IDs from genes_list.
-        
+
     notfound : List of strings or None
         List of input IDs which were not found by mygene conversion tools.
-        
+
     df : pandas.DataFrame
         Dataframe containing query gene IDs as index returned by _convert_geneID.
 
@@ -73,7 +75,7 @@ def convert_to_entrez(genes_list: List[str]) -> Tuple[List[str], List[str], pd.D
     # Perform Conversion
     df = mg.querymany(
         genes_list,
-        scopes='refseq,symbol,entrezgene,reporter,uniprot,hgnc,ensembl.gene',
+        scopes="refseq,symbol,entrezgene,reporter,uniprot,hgnc,ensembl.gene",
         verbose=False,
         as_dataframe=True,
         entrezonly=True,
@@ -90,30 +92,37 @@ def convert_to_entrez(genes_list: List[str]) -> Tuple[List[str], List[str], pd.D
     return entrez, notfound, df
 
 
-def get_top_genes(metagene: pd.Series,
-                  threshold: Union[
-                      int, float, np.ndarray, List[Union[float, int]], Tuple[Union[float, int], Union[float, int]]],
-                  method: str,
-                  tail: str) -> List[str]:
-    """ Select the extreme expressed genes for a given metagene.
-    
+def get_top_genes(
+    metagene: pd.Series,
+    threshold: Union[
+        int,
+        float,
+        np.ndarray,
+        List[Union[float, int]],
+        Tuple[Union[float, int], Union[float, int]],
+    ],
+    method: str,
+    tail: str,
+) -> List[str]:
+    """Select the extreme expressed genes for a given metagene.
+
     Parameters
     ----------
     metagene : pandas.Series, shape (n_genes)
         The indexes should be valid gene IDs (e.g. HUGO gene symbols, EntrezGene...)
-        
+
     threshold : numeric or array-like of two numerics
         Used for selecting the extreme expressed genes in the metagene (i.e. most expressed
-        and/or least expressed genes). If a tuple is passed, different thresholds are used 
+        and/or least expressed genes). If a tuple is passed, different thresholds are used
         for the left tail and the right tail of the metagene distribution.
-        
+
     method : {'quantile' , 'std'}
         Method for selecting the extreme expressed genes in the metagene.
         - 'quantile' will select genes above and/or under certain quantiles of the metagene
           distribution.
         - 'std' will select genes above mu + k*std and/or under mu - l*std (with k and l defined by the
           threshold parameter and mu and std the mean and the standard deviation of the metagene distribution).
-        
+
     tail : {'left' , 'right' , 'both' , 'heaviest'}
         Define the tail of the metagene distribution to look at for selecting the extreme expressed genes.
 
@@ -148,7 +157,9 @@ def get_top_genes(metagene: pd.Series,
         else:
             top_genes = list(S_l.index)
     else:
-        raise ValueError("tail parameter can only be set to 'left, 'right', 'both' or 'heaviest'")
+        raise ValueError(
+            "tail parameter can only be set to 'left, 'right', 'both' or 'heaviest'"
+        )
 
     return top_genes
 
@@ -171,7 +182,9 @@ def check_data(data: Any, pre_selected: bool) -> Union[pd.Series, pd.DataFrame]:
     return data
 
 
-def check_params(threshold: Union[int, float, tuple, list, np.ndarray], method: str, tail: str) -> np.ndarray:
+def check_params(
+    threshold: Union[int, float, tuple, list, np.ndarray], method: str, tail: str
+) -> np.ndarray:
     if isinstance(threshold, (int, float)):
         threshold = np.array([threshold] * 2)
     elif not isinstance(threshold, (tuple, list, np.ndarray)) or len(threshold) != 2:

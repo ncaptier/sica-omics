@@ -9,17 +9,17 @@ from typing import Union, Optional, NoReturn, List, Tuple
 
 
 class ReactomeAnalysis(object):
-    """ Provide tools for running reactome enrichment analysis for different metagenes.
-    
+    """Provide tools for running reactome enrichment analysis for different metagenes.
+
     Parameters
     ----------
-    data : 
+    data :
         If ``pre_selected = False`` : pandas.DataFrame , shape (n_metagenes , n_genes) or pandas.Series, shape (n_genes)
                 The column names (or the index keys for a serie) should be valid gene IDs.
         If ``pre_selected = True`` : pandas.Series , shape (n_metagenes)
                 For each metagene the serie contains a list of the IDs of the extreme expressed
                 genes.
-                
+
     convert_ids : boolean, optional.
         If True gene ids will be converted to Entrez gene ids. If False, gene ids should be valid ids for Reactome
         analysis (e.g. HUGO gene symbols, EntrezGene , Uniprot ...).
@@ -28,28 +28,28 @@ class ReactomeAnalysis(object):
     pre_selected : boolean , optional.
         Indicate whether the extreme genes have already been selected (see above).
         The default is False.
-        
+
     threshold : numeric or array-like of two numerics , optional
         See sica.annotate._utils.get_top_genes. The default is 3.
-        
+
     method : {'quantile' , 'std'} , optional
         See sica.annotate._utils.get_top_genes. The default is 'std'.
-        
+
     tail : {'left' , 'right' , 'both' , 'heaviest'} , optional
         See sica.annotate._utils.get_top_genes. The default is 'heaviest'.
-    
+
     Attributes
-    ----------    
+    ----------
     top_genes_ : pandas.DataFrame, shape (n_metagenes , 3)
         For each metagene the 'inputs' column contains a list of the IDs of the extreme expressed
         genes.
-        
+
     References
     ----------
     Please refer to the package reactome2py for more details (see https://github.com/reactome/reactome2py) .
-    
+
     If you want to better understand how reactome works, please see https://reactome.org/userguide .
-    
+
     Examples
     --------
     >>> from sica.annotate import reactome
@@ -59,14 +59,21 @@ class ReactomeAnalysis(object):
     """
 
     def __init__(
-            self,
-            data: Union[pd.DataFrame, pd.Series],
-            convert_ids: Optional[bool] = True,
-            pre_selected: Optional[bool] = False,
-            threshold: Optional[Union[
-                int, float, np.ndarray, List[Union[float, int]], Tuple[Union[float, int], Union[float, int]]]] = 3,
-            method: Optional[str] = "std",
-            tail: Optional[str] = "heaviest",
+        self,
+        data: Union[pd.DataFrame, pd.Series],
+        convert_ids: Optional[bool] = True,
+        pre_selected: Optional[bool] = False,
+        threshold: Optional[
+            Union[
+                int,
+                float,
+                np.ndarray,
+                List[Union[float, int]],
+                Tuple[Union[float, int], Union[float, int]],
+            ]
+        ] = 3,
+        method: Optional[str] = "std",
+        tail: Optional[str] = "heaviest",
     ) -> NoReturn:
 
         # Check data
@@ -97,14 +104,14 @@ class ReactomeAnalysis(object):
         self.tokens = {ind: None for ind in data.index}
 
     def convert_metagenes(self, idx: Union[str, list, object]) -> None:
-        """ Convert the IDs of the most expressed genes contained in ``top_genes_``.
-        
+        """Convert the IDs of the most expressed genes contained in ``top_genes_``.
+
         Parameters
         ----------
         idx : {"all" , object , list of objects}
-        
-            If ``idx = "all"`` all the metagenes will be converted. 
-            
+
+            If ``idx = "all"`` all the metagenes will be converted.
+
             Otherwise, only the metagenes associated with ``idx`` will be converted. In that case, ``idx`` must
             correspond to valid indexes of the input data.
 
@@ -151,8 +158,8 @@ class ReactomeAnalysis(object):
         return
 
     def open_full_analysis(self, metagene: object):
-        """ Browse the analysis for the given metagene in reactome web portal.
-        
+        """Browse the analysis for the given metagene in reactome web portal.
+
         Parameters
         ----------
         metagene : object
@@ -178,17 +185,17 @@ class ReactomeAnalysis(object):
         return
 
     def get_analysis(
-            self,
-            metagene: object,
-            species: Optional[str] = "Homo sapiens",
-            sort_by: Optional[str] = "Entities FDR",
-            ascending: Optional[bool] = True,
-            p_value: Optional[float] = 0.05,
-            min_entities: Optional[int] = 10,
-            max_entities: Optional[int] = 500,
+        self,
+        metagene: object,
+        species: Optional[str] = "Homo sapiens",
+        sort_by: Optional[str] = "Entities FDR",
+        ascending: Optional[bool] = True,
+        p_value: Optional[float] = 0.05,
+        min_entities: Optional[int] = 10,
+        max_entities: Optional[int] = 500,
     ) -> pd.DataFrame:
-        """ Return the reactome enrichment analysis of a given metagene.
-        
+        """Return the reactome enrichment analysis of a given metagene.
+
         Parameters
         ----------
         metagene : object
@@ -196,19 +203,20 @@ class ReactomeAnalysis(object):
 
         species : string or list of string, optional
             List of species to filter the result. The default is 'Homo sapiens'.
-            
-        sort_by : {None , '#Entities found' , '#Entities total' , 'Entities ratio' , 'Entities pValue' , 'Entities FDR ' , '#Reactions found' , '#Reactions total' , 'Reactions ratio'}, optional
+
+        sort_by : {None , '#Entities found' , '#Entities total' , 'Entities ratio' , 'Entities pValue' , 'Entities FDR '
+        , '#Reactions found' , '#Reactions total' , 'Reactions ratio'}, optional
             How to sort the result. The default is 'Entities FDR'.
-        
+
         ascending : boolean, optional
             Sort ascending vs. descending if ``sort_by is not None``.The default is True.
-        
+
         p_value : float in (0 , 1), optional
             Only hit pathway with pValue equals or below ``p_value`` will be returned. The default is 0.05.
-            
+
         min_entities : int >= 0, optional
              Minimum number of contained entities per pathway. The default is 10.
-            
+
         max_entities : int > 0, optional
              Maximum number of contained entities per pathway. The default is 500.
 
@@ -248,12 +256,12 @@ class ReactomeAnalysis(object):
 
 
 def _get_token(ids: list) -> str:
-    """ Return the token associated with the reactome enrichment analysis.
+    """Return the token associated with the reactome enrichment analysis.
 
     Parameters
     ----------
     ids : comma separated list of genes IDs in string format.
-        The type of ID should be accepted by the Reactome analysis tool 
+        The type of ID should be accepted by the Reactome analysis tool
         (see https://reactome.org/userguide/analysis for more details).
 
     Returns
