@@ -1,7 +1,7 @@
 # sica-omics
 
 <p align="center">
-    <img src="https://github.com/ncaptier/sica-omics/blob/main/temporary_logo.png" width="400" height="400" />
+    <img src="https://github.com/ncaptier/sica-omics/blob/main/docs/temporary_logo.png" width="400" height="400" />
 </p>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
